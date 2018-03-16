@@ -73,17 +73,17 @@ enum EndPointType {
    }
 }
 
-struct AllowConfigurationEndPoint : EndPointConfigurationType {
+struct AllowConfigurationEndPoint {
    static var development: EndPointConfigurationType.Type {
-      return EndPointTesting
+      return EndPointTesting.self
    }
    
    static var production: EndPointConfigurationType.Type {
-      return EndPointProduction
+      return EndPointProduction.self
    }
 }
 
-typealias EndPointConfiguration = AllowConfigurationEndPoint.production
+typealias EndPointConfiguration = EndPointTesting
 
 
 
