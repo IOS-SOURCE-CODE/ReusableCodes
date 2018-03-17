@@ -34,25 +34,6 @@ fileprivate protocol EndPointConfigurationActiveType {
    static var active: String! { get set }
 }
 
-struct EndPoint: EndPointConfigurationActiveType {
-   
-   fileprivate typealias me = EndPoint
-   
-   fileprivate static var active: String!
-   
-   public enum Post: String {
-      case getPost
-      
-      public var value: String {
-         switch self {
-         case .getPost:
-            return me.active + "posts"
-         }
-      }
-   }
-}
-
-
 fileprivate enum EndPointConfiguration {
    
    case development
@@ -72,9 +53,28 @@ fileprivate enum EndPointConfiguration {
 }
 
 
+struct EndPoint: EndPointConfigurationActiveType {
+   
+   fileprivate typealias me = EndPoint
+   
+   fileprivate static var active: String!
+   
+   public enum Post: String {
+      case getPost
+      
+      public var value: String {
+         switch self {
+         case .getPost:
+            return me.active + "posts"
+         }
+      }
+   }
+}
+
+
 // Configuration
 
-EndPoint.active = EndPointConfiguration.development.active
+EndPoint.active = EndPointConfiguration.production.active
 
 
 EndPoint.Post.getPost.value
