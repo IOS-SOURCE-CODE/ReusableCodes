@@ -53,6 +53,8 @@ fileprivate enum EndPointConfiguration {
 }
 
 
+// EndPoint Manager
+
 struct EndPoint: EndPointConfigurationActiveType {
    
    fileprivate typealias me = EndPoint
@@ -76,8 +78,6 @@ struct EndPoint: EndPointConfigurationActiveType {
 
 EndPoint.active = EndPointConfiguration.production.active
 
-
-EndPoint.Post.getPost.value
 
 
 // Usage
