@@ -2,20 +2,19 @@
 
 import Foundation
 
-public protocol EndPointConfigurationType {
+fileprivate protocol EndPointConfigurationType {
    static var baseAPI : String { get }
 }
 
-
-struct EndPointProduction: EndPointConfigurationType  {
+fileprivate struct EndPointProduction: EndPointConfigurationType  {
    static var baseAPI: String {
       return "https://jsonplaceholder.typicode.com/"
    }
 }
 
-struct EndPointTesting: EndPointConfigurationType {
+fileprivate struct EndPointDevelopment: EndPointConfigurationType {
    static var baseAPI: String {
-      return "https://testing.com"
+      return "https://testing.com/"
    }
 }
 
@@ -26,17 +25,20 @@ fileprivate struct EndPointConfigurationFactory<T:EndPointConfigurationType> {
       return T.baseAPI
    }
    
-   static var baseAPI: String {
+   static var active: String {
       return currentEndPoint
    }
 }
 
+fileprivate protocol EndPointConfigurationActiveType {
+   static var active: String! { get set }
+}
 
-public struct EndPoint {
+struct EndPoint: EndPointConfigurationActiveType {
    
    fileprivate typealias me = EndPoint
    
-   private static let baseAPI = EndPointConfigurationFactory<EndPointConfiguration>.baseAPI
+   fileprivate static var active: String!
    
    public enum Post: String {
       case getPost
@@ -44,48 +46,40 @@ public struct EndPoint {
       public var value: String {
          switch self {
          case .getPost:
-            return me.baseAPI + "posts"
+            return me.active + "posts"
          }
       }
    }
 }
 
 
-struct Box<T:EndPointConfigurationType> {
+fileprivate enum EndPointConfiguration {
    
-   static var value: T.Type {
-      return T.self
-   }
-}
-
-enum EndPointType {
-   case production
    case development
-   
-   var value: EndPointConfigurationType.Type {
+   case production
+
+   var active: String {
       switch self {
-      case .production:
-            return EndPointProduction.self
-         
       case .development:
-            return EndPointTesting.self
+         return EndPointConfigurationFactory<EndPointDevelopment>.active
+         
+      case .production:
+         return EndPointConfigurationFactory<EndPointProduction>.active
       }
-   }
-}
-
-struct AllowConfigurationEndPoint {
-   static var development: EndPointConfigurationType.Type {
-      return EndPointTesting.self
+      
    }
    
-   static var production: EndPointConfigurationType.Type {
-      return EndPointProduction.self
-   }
 }
 
-typealias EndPointConfiguration = EndPointTesting
+
+// Configuration
+
+EndPoint.active = EndPointConfiguration.development.active
 
 
+EndPoint.Post.getPost.value
 
+
+// Usage
 EndPoint.Post.getPost.value
 
